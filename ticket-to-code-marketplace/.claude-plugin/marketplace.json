@@ -1,0 +1,11 @@
+{
+  "name": "seif-tools",
+  "owner": { "name": "Seif Allah" },
+  "plugins": [
+    {
+      "name": "ticket-to-code",
+      "source": "./ticket-to-code",
+      "description": "Four-stage agentic workflow: explore a Jira ticket + repo, write technical instructions back to the ticket, produce an implementation plan, then implement it."
+    }
+  ]
+}
