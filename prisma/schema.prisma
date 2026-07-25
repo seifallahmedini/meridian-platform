@@ -11,8 +11,56 @@ datasource db {
 }
 
 // Placeholder model proving the schema is valid and generates a client.
-// Replace/extend once the first feature ticket (MLP-9+) needs real persistence.
 model HealthCheck {
   id        String   @id @default(cuid())
   checkedAt DateTime @default(now())
+}
+
+// MLP-18: Single Shipment Creation
+
+enum ServiceLevel {
+  STANDARD
+  EXPEDITED
+  GUARANTEED
+}
+
+enum ShipmentStatus {
+  DRAFT
+  SUBMITTED
+}
+
+model Location {
+  id           String   @id @default(cuid())
+  label        String
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  region       String
+  postalCode   String
+  country      String
+  createdAt    DateTime @default(now())
+
+  originFor      Shipment[] @relation("ShipmentOrigin")
+  destinationFor Shipment[] @relation("ShipmentDestination")
+}
+
+model Shipment {
+  id                     String         @id @default(cuid())
+  status                 ShipmentStatus @default(DRAFT)
+  originId               String?
+  origin                 Location?      @relation("ShipmentOrigin", fields: [originId], references: [id])
+  destinationId          String?
+  destination            Location?      @relation("ShipmentDestination", fields: [destinationId], references: [id])
+  weightLbs              Float?
+  lengthIn               Float?
+  widthIn                Float?
+  heightIn               Float?
+  freightClass           String?
+  serviceLevel           ServiceLevel?
+  isHazmat               Boolean        @default(false)
+  hazmatUnNumber         String?
+  hazmatPackingGroup     String?
+  hazmatEmergencyContact String?
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
 }
