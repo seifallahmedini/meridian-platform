@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -43,6 +43,7 @@ export function LocationAutocomplete({
   const [query, setQuery] = useState("");
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const debouncedQuery = useDebouncedValue(query, 300);
+  const errorId = useId();
 
   const { data: results = [], isFetching } = trpc.location.search.useQuery(
     { query: debouncedQuery },
@@ -58,6 +59,8 @@ export function LocationAutocomplete({
               type="button"
               variant="outline"
               aria-invalid={!!error}
+              aria-label={label}
+              aria-describedby={error ? errorId : undefined}
               className="w-full justify-between font-normal"
             />
           }
@@ -118,7 +121,7 @@ export function LocationAutocomplete({
         </PopoverContent>
       </Popover>
       {error && (
-        <p className="text-sm text-destructive" role="alert">
+        <p id={errorId} className="text-sm text-destructive" role="alert">
           {error}
         </p>
       )}
