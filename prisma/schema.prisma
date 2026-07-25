@@ -1,0 +1,18 @@
+// Prisma schema for the Meridian Logistics Platform.
+// See docs/adr/0001-tech-stack.md for the stack decision this implements.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Placeholder model proving the schema is valid and generates a client.
+// Replace/extend once the first feature ticket (MLP-9+) needs real persistence.
+model HealthCheck {
+  id        String   @id @default(cuid())
+  checkedAt DateTime @default(now())
+}
