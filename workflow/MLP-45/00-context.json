@@ -1,0 +1,12 @@
+{
+  "ticketKey": "MLP-45",
+  "ticketUrl": "https://seifallahmedini.atlassian.net/browse/MLP-45",
+  "cloudId": "cba64c90-447a-4a15-8f2e-24affb42f69d",
+  "repo": {
+    "provider": "github",
+    "url": "https://github.com/seifallahmedini/meridian-platform",
+    "defaultBranch": "main"
+  },
+  "workBranch": "feature/MLP-45-tech-stack-adr-scaffold",
+  "startedAt": "2026-07-25T04:02:40Z"
+}
