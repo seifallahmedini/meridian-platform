@@ -1,0 +1,16 @@
+{
+  "name": "ticket-to-code",
+  "version": "0.1.0",
+  "description": "An agentic, four-stage workflow that takes a Jira ticket from exploration to shipped code: explore the ticket and repo, write technical instructions back to the ticket, produce an implementation plan, then implement it. Each stage is a skill that hands off to the next.",
+  "author": {
+    "name": "Seif Allah"
+  },
+  "keywords": [
+    "jira",
+    "github",
+    "workflow",
+    "planning",
+    "implementation",
+    "agentic"
+  ]
+}
