@@ -1,0 +1,36 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+.vs/
+artifacts/
+
+# Node / frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+web/.vite/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Aspire
+**/AppHost/obj/
+**/AppHost/bin/
+.aspire/
+
+# IDE
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
