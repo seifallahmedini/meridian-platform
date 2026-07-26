@@ -1,11 +1,11 @@
 import { createBrowserRouter } from 'react-router'
 import { AppShell } from '@/layouts/AppShell'
-import { HomePage } from '@/pages/HomePage'
+import { SampleWidgetsPage } from '@/pages/SampleWidgetsPage'
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <AppShell />,
-    children: [{ index: true, element: <HomePage /> }],
+    children: [{ index: true, element: <SampleWidgetsPage /> }],
   },
 ])
