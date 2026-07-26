@@ -1,0 +1,21 @@
+{
+  "runtime": "Net90",
+  "documentGenerator": {
+    "fromDocument": {
+      "url": "./openapi.json",
+      "output": null,
+      "newLineBehavior": "Auto"
+    }
+  },
+  "codeGenerators": {
+    "openApiToTypeScriptClient": {
+      "className": "{controller}Client",
+      "template": "Fetch",
+      "operationGenerationMode": "SingleClientFromOperationId",
+      "generateClientClasses": true,
+      "generateDtoTypes": true,
+      "typeScriptVersion": 5.0,
+      "output": "src/lib/api-client/generated-client.ts"
+    }
+  }
+}

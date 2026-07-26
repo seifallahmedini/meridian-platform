@@ -12,6 +12,7 @@ dist/
 dist-ssr/
 *.local
 web/.vite/
+web/openapi.json
 
 # Env / secrets
 .env

@@ -12,7 +12,8 @@ public static class SampleEndpoints
         group.MapGet("/", async (SampleWidgetService service, CancellationToken cancellationToken) =>
                 Results.Ok(await service.GetAllAsync(cancellationToken)))
             .AllowAnonymous()
-            .WithName("GetSampleWidgets");
+            .WithName("GetSampleWidgets")
+            .Produces<IReadOnlyList<SampleWidgetDto>>();
 
         group.MapPost("/", async (
                 CreateSampleWidgetRequest request,
@@ -30,11 +31,15 @@ public static class SampleEndpoints
                 return Results.Created($"/api/v1/sample-widgets/{created.Id}", created);
             })
             .AllowAnonymous()
-            .WithName("CreateSampleWidget");
+            .WithName("CreateSampleWidget")
+            .Produces<SampleWidgetDto>(StatusCodes.Status201Created)
+            .ProducesValidationProblem();
 
         group.MapGet("/protected", async (SampleWidgetService service, CancellationToken cancellationToken) =>
                 Results.Ok(await service.GetAllAsync(cancellationToken)))
             .RequireAuthorization()
-            .WithName("GetSampleWidgetsProtected");
+            .WithName("GetSampleWidgetsProtected")
+            .Produces<IReadOnlyList<SampleWidgetDto>>()
+            .Produces(StatusCodes.Status401Unauthorized);
     }
 }
