@@ -1,9 +1,11 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Connection-string resource name is "Postgres" (not "meridian") so the injected
+// The database resource is named "Postgres" (not "meridian") so the injected
 // ConnectionStrings__Postgres env var matches what appsettings.json/docker-compose
-// already use in src/Api's Program.cs.
-var postgres = builder.AddPostgres("postgres")
+// already use in src/Api's Program.cs. The server resource is named
+// "postgres-server" — Aspire resource names are case-insensitive, so it can't
+// share "postgres"/"Postgres" with the database resource.
+var postgres = builder.AddPostgres("postgres-server")
     .WithDataVolume()
     .AddDatabase("Postgres", databaseName: "meridian");
 
@@ -46,7 +48,7 @@ builder.AddNpmApp("web", "../../web", "dev")
     .WithEnvironment("VITE_API_BASE_URL", api.GetEndpoint("http"))
     .WithEnvironment("VITE_KEYCLOAK_AUTHORITY", keycloakRealmUrl)
     .WithEnvironment("VITE_KEYCLOAK_CLIENT_ID", "meridian-web")
-    .WithHttpEndpoint(port: 5173, targetPort: 5173, env: "PORT")
+    .WithHttpEndpoint(port: 5173, targetPort: 5173, env: "PORT", isProxied: false)
     .WithExternalHttpEndpoints();
 
 builder.Build().Run();
