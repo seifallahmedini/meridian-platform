@@ -16,6 +16,15 @@ builder.Host.UseSerilog((context, configuration) =>
 
 builder.Services.AddOpenApi();
 
+const string WebCorsPolicy = "Web";
+var webOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
+    ?? ["http://localhost:5173", "http://localhost:4173"];
+builder.Services.AddCors(options =>
+    options.AddPolicy(WebCorsPolicy, policy => policy
+        .WithOrigins(webOrigins)
+        .AllowAnyHeader()
+        .AllowAnyMethod()));
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
 
@@ -53,6 +62,8 @@ if (app.Environment.IsDevelopment())
     using var scope = app.Services.CreateScope();
     await scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.MigrateAsync();
 }
+
+app.UseCors(WebCorsPolicy);
 
 app.UseAuthentication();
 app.UseAuthorization();

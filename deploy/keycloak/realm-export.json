@@ -11,10 +11,10 @@
       "publicClient": true,
       "protocol": "openid-connect",
       "standardFlowEnabled": true,
-      "directAccessGrantsEnabled": false,
+      "directAccessGrantsEnabled": true,
       "implicitFlowEnabled": false,
-      "redirectUris": ["http://localhost:5173/*"],
-      "webOrigins": ["http://localhost:5173"],
+      "redirectUris": ["http://localhost:5173/*", "http://localhost:4173/*"],
+      "webOrigins": ["http://localhost:5173", "http://localhost:4173"],
       "attributes": {
         "pkce.code.challenge.method": "S256"
       },
@@ -46,6 +46,9 @@
       "enabled": true,
       "email": "testuser@meridian.local",
       "emailVerified": true,
+      "firstName": "Test",
+      "lastName": "User",
+      "requiredActions": [],
       "credentials": [
         {
           "type": "password",

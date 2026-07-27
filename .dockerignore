@@ -1,0 +1,10 @@
+bin/
+obj/
+**/bin/
+**/obj/
+.vs/
+.git/
+web/
+tests/
+workflow/
+ticket-to-code-marketplace/
