@@ -1,0 +1,12 @@
+{
+  "ticketKey": "MLP-46",
+  "ticketUrl": "https://seifallahmedini.atlassian.net/browse/MLP-46",
+  "cloudId": "cba64c90-447a-4a15-8f2e-24affb42f69d",
+  "repo": {
+    "provider": "github",
+    "url": "https://github.com/seifallahmedini/meridian-platform",
+    "defaultBranch": "main"
+  },
+  "workBranch": "feature/MLP-46-project-skeleton-scaffold",
+  "startedAt": "2026-07-26T19:42:25Z"
+}
