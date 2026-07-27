@@ -1,0 +1,95 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: meridian
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  # KC_HOSTNAME=localhost makes Keycloak always report its issuer/URLs as
+  # http://localhost:8080, matching what the browser (and thus every issued
+  # token's `iss` claim) sees, even though the Api reaches Keycloak inside
+  # the compose network via the "keycloak" service name.
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    command: start-dev --import-realm
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME: http://localhost:8080
+      KC_HOSTNAME_STRICT: "false"
+      # Lets backchannel URLs (jwks_uri, token_endpoint) resolve to whatever
+      # host actually reached Keycloak (e.g. "keycloak:8080" from inside the
+      # compose network), while frontend URLs (issuer, authorization_endpoint)
+      # stay fixed to KC_HOSTNAME so they match what the browser used. Without
+      # this, the Api can discover Keycloak's metadata but then fails to fetch
+      # the JWKS because jwks_uri would point at "localhost:8080" — which
+      # inside the Api's own container resolves to itself, not Keycloak.
+      KC_HOSTNAME_BACKCHANNEL_DYNAMIC: "true"
+      KC_HTTP_ENABLED: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./deploy/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+    healthcheck:
+      # No curl/wget in the Keycloak image; use bash's /dev/tcp to make a raw
+      # HTTP request. Waiting for this (not just "container started") matters:
+      # the Api's JWT bearer discovery fetch can otherwise race Keycloak's
+      # realm import and permanently cache a failed lookup for its process
+      # lifetime.
+      test:
+        [
+          "CMD-SHELL",
+          'exec 3<>/dev/tcp/localhost/8080 && echo -e "GET /realms/meridian/.well-known/openid-configuration HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3 && grep -q "200 OK" <&3',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  api:
+    build:
+      context: .
+      dockerfile: src/Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Postgres: "Host=postgres;Database=meridian;Username=postgres;Password=postgres"
+      Keycloak__Authority: "http://keycloak:8080/realms/meridian"
+      Keycloak__Audience: "meridian-api"
+      Cors__AllowedOrigins__0: "http://localhost:4173"
+    ports:
+      - "5299:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_API_BASE_URL: http://localhost:5299
+        VITE_KEYCLOAK_AUTHORITY: http://localhost:8080/realms/meridian
+        VITE_KEYCLOAK_CLIENT_ID: meridian-web
+    ports:
+      - "4173:4173"
+    depends_on:
+      - api
+
+volumes:
+  postgres-data:
