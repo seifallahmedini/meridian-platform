@@ -36,7 +36,7 @@ public partial class SubmitShipmentRequestValidator : AbstractValidator<SaveShip
         {
             RuleFor(x => x.HazmatUnNumber)
                 .NotEmpty()
-                .Must(v => UnNumberRegex().IsMatch(v!))
+                .Must(v => v is not null && UnNumberRegex().IsMatch(v))
                 .WithMessage("UN number must match the format UN####.");
             RuleFor(x => x.HazmatPackingGroup)
                 .NotEmpty()
