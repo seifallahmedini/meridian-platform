@@ -17,7 +17,12 @@ public record ShipmentDto(
     string? HazmatUnNumber,
     string? HazmatPackingGroup,
     string? HazmatEmergencyContact,
-    ServiceLevel? ServiceLevel,
+    // Wire contract uses a plain string (not the ServiceLevel enum) because ASP.NET Core's
+    // OpenAPI 3.1 output represents a nullable enum property as oneOf:[null, $ref], which NSwag's
+    // TypeScript client generator does not resolve back to the shared enum — it synthesizes a
+    // fresh duplicate type per occurrence instead. A plain string avoids the bug entirely; the
+    // enum is still enforced server-side (see the FluentValidation validators).
+    string? ServiceLevel,
     ShipmentStatus Status,
     DateTimeOffset CreatedAt,
     DateTimeOffset UpdatedAt
@@ -27,7 +32,7 @@ public record ShipmentSummaryDto(
     Guid Id,
     string? OriginLocationLabel,
     string? DestinationLocationLabel,
-    ServiceLevel? ServiceLevel,
+    string? ServiceLevel,
     DateTimeOffset UpdatedAt
 );
 
@@ -43,6 +48,6 @@ public record SaveShipmentRequest(
     string? HazmatUnNumber,
     string? HazmatPackingGroup,
     string? HazmatEmergencyContact,
-    ServiceLevel? ServiceLevel,
+    string? ServiceLevel,
     bool IsDraft
 );

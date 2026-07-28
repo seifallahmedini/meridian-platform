@@ -30,7 +30,10 @@ public partial class SubmitShipmentRequestValidator : AbstractValidator<SaveShip
             .Must(fc => FreightClasses.All.Contains(fc!))
             .WithMessage("Freight class must be one of the supported NMFC classes.");
 
-        RuleFor(x => x.ServiceLevel).NotNull().IsInEnum();
+        RuleFor(x => x.ServiceLevel)
+            .NotEmpty()
+            .Must(sl => Enum.TryParse<ServiceLevel>(sl, out _))
+            .WithMessage("Service level must be one of Standard, Expedited, Guaranteed.");
 
         When(x => x.IsHazmat, () =>
         {

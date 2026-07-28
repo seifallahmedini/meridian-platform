@@ -880,7 +880,7 @@ export class SaveShipmentRequest implements ISaveShipmentRequest {
     hazmatUnNumber!: string | undefined;
     hazmatPackingGroup!: string | undefined;
     hazmatEmergencyContact!: string | undefined;
-    serviceLevel!: ServiceLevel2 | undefined;
+    serviceLevel!: string | undefined;
     isDraft!: boolean;
 
     [key: string]: any;
@@ -958,16 +958,10 @@ export interface ISaveShipmentRequest {
     hazmatUnNumber: string | undefined;
     hazmatPackingGroup: string | undefined;
     hazmatEmergencyContact: string | undefined;
-    serviceLevel: ServiceLevel2 | undefined;
+    serviceLevel: string | undefined;
     isDraft: boolean;
 
     [key: string]: any;
-}
-
-export enum ServiceLevel {
-    Standard = "Standard",
-    Expedited = "Expedited",
-    Guaranteed = "Guaranteed",
 }
 
 export class ShipmentDto implements IShipmentDto {
@@ -985,7 +979,7 @@ export class ShipmentDto implements IShipmentDto {
     hazmatUnNumber!: string | undefined;
     hazmatPackingGroup!: string | undefined;
     hazmatEmergencyContact!: string | undefined;
-    serviceLevel!: ServiceLevel3 | undefined;
+    serviceLevel!: string | undefined;
     status!: ShipmentStatus;
     createdAt!: Date;
     updatedAt!: Date;
@@ -1078,7 +1072,7 @@ export interface IShipmentDto {
     hazmatUnNumber: string | undefined;
     hazmatPackingGroup: string | undefined;
     hazmatEmergencyContact: string | undefined;
-    serviceLevel: ServiceLevel3 | undefined;
+    serviceLevel: string | undefined;
     status: ShipmentStatus;
     createdAt: Date;
     updatedAt: Date;
@@ -1095,7 +1089,7 @@ export class ShipmentSummaryDto implements IShipmentSummaryDto {
     id!: string;
     originLocationLabel!: string | undefined;
     destinationLocationLabel!: string | undefined;
-    serviceLevel!: ServiceLevel4 | undefined;
+    serviceLevel!: string | undefined;
     updatedAt!: Date;
 
     [key: string]: any;
@@ -1149,140 +1143,8 @@ export interface IShipmentSummaryDto {
     id: string;
     originLocationLabel: string | undefined;
     destinationLocationLabel: string | undefined;
-    serviceLevel: ServiceLevel4 | undefined;
+    serviceLevel: string | undefined;
     updatedAt: Date;
-
-    [key: string]: any;
-}
-
-export class ServiceLevel2 implements IServiceLevel2 {
-
-    [key: string]: any;
-
-    constructor(data?: IServiceLevel2) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-        }
-    }
-
-    static fromJS(data: any): ServiceLevel2 {
-        data = typeof data === 'object' ? data : {};
-        let result = new ServiceLevel2();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        return data;
-    }
-}
-
-export interface IServiceLevel2 {
-
-    [key: string]: any;
-}
-
-export class ServiceLevel3 implements IServiceLevel3 {
-
-    [key: string]: any;
-
-    constructor(data?: IServiceLevel3) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-        }
-    }
-
-    static fromJS(data: any): ServiceLevel3 {
-        data = typeof data === 'object' ? data : {};
-        let result = new ServiceLevel3();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        return data;
-    }
-}
-
-export interface IServiceLevel3 {
-
-    [key: string]: any;
-}
-
-export class ServiceLevel4 implements IServiceLevel4 {
-
-    [key: string]: any;
-
-    constructor(data?: IServiceLevel4) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (this as any)[property] = (data as any)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-        }
-    }
-
-    static fromJS(data: any): ServiceLevel4 {
-        data = typeof data === 'object' ? data : {};
-        let result = new ServiceLevel4();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        return data;
-    }
-}
-
-export interface IServiceLevel4 {
 
     [key: string]: any;
 }

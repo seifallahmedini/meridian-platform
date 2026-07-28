@@ -27,7 +27,7 @@ public class ShipmentEndpointTests(ApiFactory factory) : IClassFixture<ApiFactor
     private static SaveShipmentRequest ValidSubmitRequest(Guid originId, Guid destinationId) => new(
         originId, destinationId, WeightKg: 10, LengthCm: 1, WidthCm: 1, HeightCm: 1,
         FreightClass: "100", IsHazmat: false, HazmatUnNumber: null, HazmatPackingGroup: null,
-        HazmatEmergencyContact: null, ServiceLevel: ServiceLevel.Standard, IsDraft: false);
+        HazmatEmergencyContact: null, ServiceLevel: nameof(ServiceLevel.Standard), IsDraft: false);
 
     [Fact]
     public async Task SaveDraft_WithAllFieldsEmpty_Succeeds()

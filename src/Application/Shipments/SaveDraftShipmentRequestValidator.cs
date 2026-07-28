@@ -19,6 +19,9 @@ public class SaveDraftShipmentRequestValidator : AbstractValidator<SaveShipmentR
             .Must(fc => FreightClasses.All.Contains(fc!))
             .When(x => x.FreightClass is not null)
             .WithMessage("Freight class must be one of the supported NMFC classes.");
-        RuleFor(x => x.ServiceLevel).IsInEnum().When(x => x.ServiceLevel.HasValue);
+        RuleFor(x => x.ServiceLevel)
+            .Must(sl => Enum.TryParse<ServiceLevel>(sl, out _))
+            .When(x => x.ServiceLevel is not null)
+            .WithMessage("Service level must be one of Standard, Expedited, Guaranteed.");
     }
 }
