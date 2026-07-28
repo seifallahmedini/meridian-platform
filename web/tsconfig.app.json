@@ -24,7 +24,9 @@
     /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
+    // Off: NSwag always emits real TS `enum`s for the generated API client, which
+    // erasableSyntaxOnly (meant for Node's type-stripping execution, not our Vite bundle) rejects.
+    "erasableSyntaxOnly": false,
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"]
