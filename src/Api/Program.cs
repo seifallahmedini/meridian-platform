@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
 using FluentValidation;
 using MeridianPlatform.Api.Endpoints;
 using MeridianPlatform.Api.Middleware;
+using MeridianPlatform.Application.Locations;
 using MeridianPlatform.Application.SampleWidgets;
+using MeridianPlatform.Application.Shipments;
 using MeridianPlatform.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +18,8 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration).WriteTo.Console());
 
 builder.Services.AddOpenApi();
+builder.Services.ConfigureHttpJsonOptions(options =>
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 const string WebCorsPolicy = "Web";
 var webOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>()
@@ -29,6 +34,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Postgres")));
 
 builder.Services.AddScoped<SampleWidgetService>();
+builder.Services.AddScoped<LocationService>();
+builder.Services.AddScoped<ShipmentService>();
 builder.Services.AddValidatorsFromAssemblyContaining<CreateSampleWidgetRequestValidator>();
 
 builder.Services
@@ -70,6 +77,7 @@ app.UseAuthorization();
 
 app.MapHealthEndpoints();
 app.MapSampleEndpoints();
+app.MapLocationEndpoints();
 
 app.Run();
 
