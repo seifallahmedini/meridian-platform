@@ -19,7 +19,8 @@ public static class ShipmentEndpoints
                 CancellationToken cancellationToken) =>
             {
                 var validator = PickValidator(validators, request.IsDraft);
-                var validationResult = await validator.ValidateAsync(request, cancellationToken);
+                var validationResult = await validator.ValidateAsync(
+                    BuildValidationContext(request, user.GetOwnerId()), cancellationToken);
                 if (!validationResult.IsValid)
                 {
                     return Results.ValidationProblem(validationResult.ToDictionary());
@@ -30,7 +31,8 @@ public static class ShipmentEndpoints
             })
             .WithName("CreateShipment")
             .Produces<ShipmentDto>(StatusCodes.Status201Created)
-            .ProducesValidationProblem();
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status401Unauthorized);
 
         group.MapPut("/{id:guid}", async (
                 Guid id,
@@ -41,7 +43,8 @@ public static class ShipmentEndpoints
                 CancellationToken cancellationToken) =>
             {
                 var validator = PickValidator(validators, request.IsDraft);
-                var validationResult = await validator.ValidateAsync(request, cancellationToken);
+                var validationResult = await validator.ValidateAsync(
+                    BuildValidationContext(request, user.GetOwnerId()), cancellationToken);
                 if (!validationResult.IsValid)
                 {
                     return Results.ValidationProblem(validationResult.ToDictionary());
@@ -53,7 +56,8 @@ public static class ShipmentEndpoints
             .WithName("UpdateShipment")
             .Produces<ShipmentDto>()
             .Produces(StatusCodes.Status404NotFound)
-            .ProducesValidationProblem();
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status401Unauthorized);
 
         group.MapGet("/", async (
                 ShipmentStatus? status,
@@ -62,7 +66,8 @@ public static class ShipmentEndpoints
                 CancellationToken cancellationToken) =>
                 Results.Ok(await service.ListAsync(user.GetOwnerId(), status, cancellationToken)))
             .WithName("GetShipments")
-            .Produces<IReadOnlyList<ShipmentSummaryDto>>();
+            .Produces<IReadOnlyList<ShipmentSummaryDto>>()
+            .Produces(StatusCodes.Status401Unauthorized);
 
         group.MapGet("/{id:guid}", async (
                 Guid id,
@@ -75,7 +80,8 @@ public static class ShipmentEndpoints
             })
             .WithName("GetShipmentById")
             .Produces<ShipmentDto>()
-            .Produces(StatusCodes.Status404NotFound);
+            .Produces(StatusCodes.Status404NotFound)
+            .Produces(StatusCodes.Status401Unauthorized);
     }
 
     private static IValidator<SaveShipmentRequest> PickValidator(
@@ -83,4 +89,12 @@ public static class ShipmentEndpoints
         isDraft
             ? validators.OfType<SaveDraftShipmentRequestValidator>().Single()
             : validators.OfType<SubmitShipmentRequestValidator>().Single();
+
+    private static ValidationContext<SaveShipmentRequest> BuildValidationContext(
+        SaveShipmentRequest request, string ownerId)
+    {
+        var context = new ValidationContext<SaveShipmentRequest>(request);
+        context.RootContextData[LocationOwnershipRule.OwnerIdContextKey] = ownerId;
+        return context;
+    }
 }

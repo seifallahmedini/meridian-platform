@@ -37,6 +37,7 @@ export function NewShipmentPage() {
   const [originLabel, setOriginLabel] = useState<string | null>(null)
   const [destinationLabel, setDestinationLabel] = useState<string | null>(null)
   const [errorAnnouncement, setErrorAnnouncement] = useState('')
+  const [saveError, setSaveError] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
 
   const form = useForm<ShipmentFormValues>({
@@ -92,6 +93,7 @@ export function NewShipmentPage() {
       return id ? client!.updateShipment(id, request) : client!.createShipment(request)
     },
     onSuccess: (_, { isDraft }) => {
+      setSaveError(null)
       queryClient.invalidateQueries({ queryKey: ['shipments'] })
       if (isDraft) {
         navigate('/shipments/drafts')
@@ -99,10 +101,14 @@ export function NewShipmentPage() {
         setSubmitted(true)
       }
     },
+    onError: (error) => {
+      setSaveError(error instanceof Error ? error.message : 'Failed to save the shipment. Please try again.')
+    },
   })
 
   const onSaveDraft = form.handleSubmit((values) => {
     setErrorAnnouncement('')
+    setSaveError(null)
     saveMutation.mutate({ values, isDraft: true })
   })
 
@@ -124,6 +130,7 @@ export function NewShipmentPage() {
     }
 
     setErrorAnnouncement('')
+    setSaveError(null)
     saveMutation.mutate({ values, isDraft: false })
   })
 
@@ -231,6 +238,12 @@ export function NewShipmentPage() {
                 </FormItem>
               )}
             />
+
+            {saveError && (
+              <p role="alert" className="text-destructive text-sm">
+                {saveError}
+              </p>
+            )}
 
             <div className="flex gap-3">
               <Button type="button" variant="outline" onClick={onSaveDraft} disabled={saveMutation.isPending}>

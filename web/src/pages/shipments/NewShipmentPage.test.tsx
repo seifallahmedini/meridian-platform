@@ -79,4 +79,14 @@ describe('NewShipmentPage', () => {
 
     expect(screen.getByRole('combobox', { name: /origin/i })).toHaveTextContent('Origin Warehouse')
   })
+
+  it('shows a visible error and does not navigate away when saving a draft fails', async () => {
+    mockClient.createShipment.mockRejectedValueOnce(new Error('Network error'))
+    const user = userEvent.setup()
+    renderPage()
+
+    await user.click(screen.getByRole('button', { name: /save as draft/i }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent(/network error/i)
+  })
 })

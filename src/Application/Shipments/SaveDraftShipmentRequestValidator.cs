@@ -1,5 +1,6 @@
 using FluentValidation;
 using MeridianPlatform.Domain;
+using MeridianPlatform.Infrastructure.Persistence;
 
 namespace MeridianPlatform.Application.Shipments;
 
@@ -9,8 +10,11 @@ namespace MeridianPlatform.Application.Shipments;
 /// </summary>
 public class SaveDraftShipmentRequestValidator : AbstractValidator<SaveShipmentRequest>
 {
-    public SaveDraftShipmentRequestValidator()
+    public SaveDraftShipmentRequestValidator(AppDbContext dbContext)
     {
+        RuleFor(x => x.OriginLocationId).MustBeOwnedLocation(dbContext).When(x => x.OriginLocationId.HasValue);
+        RuleFor(x => x.DestinationLocationId).MustBeOwnedLocation(dbContext).When(x => x.DestinationLocationId.HasValue);
+
         RuleFor(x => x.WeightKg).GreaterThan(0).When(x => x.WeightKg.HasValue);
         RuleFor(x => x.LengthCm).GreaterThan(0).When(x => x.LengthCm.HasValue);
         RuleFor(x => x.WidthCm).GreaterThan(0).When(x => x.WidthCm.HasValue);

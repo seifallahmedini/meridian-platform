@@ -17,7 +17,8 @@ public static class LocationEndpoints
                 CancellationToken cancellationToken) =>
                 Results.Ok(await service.SearchAsync(user.GetOwnerId(), query, cancellationToken)))
             .WithName("GetLocations")
-            .Produces<IReadOnlyList<LocationDto>>();
+            .Produces<IReadOnlyList<LocationDto>>()
+            .Produces(StatusCodes.Status401Unauthorized);
 
         group.MapPost("/", async (
                 CreateLocationRequest request,
@@ -37,6 +38,7 @@ public static class LocationEndpoints
             })
             .WithName("CreateLocation")
             .Produces<LocationDto>(StatusCodes.Status201Created)
-            .ProducesValidationProblem();
+            .ProducesValidationProblem()
+            .Produces(StatusCodes.Status401Unauthorized);
     }
 }

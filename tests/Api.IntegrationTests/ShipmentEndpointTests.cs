@@ -108,6 +108,30 @@ public class ShipmentEndpointTests(ApiFactory factory) : IClassFixture<ApiFactor
     }
 
     [Fact]
+    public async Task Submit_WithAnotherOwnersLocation_ReturnsValidationProblem()
+    {
+        var ownerA = factory.CreateAuthenticatedClient("owner-location-a");
+        var ownerB = factory.CreateAuthenticatedClient("owner-location-b");
+        var (originId, destinationId) = await CreateLocationsAsync(ownerA);
+
+        var request = ValidSubmitRequest(originId, destinationId);
+        var response = await ownerB.PostAsJsonAsync("/api/v1/shipments", request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task Submit_WithNonexistentLocation_ReturnsValidationProblem_NotServerError()
+    {
+        var client = factory.CreateAuthenticatedClient("owner-missing-location");
+
+        var request = ValidSubmitRequest(Guid.NewGuid(), Guid.NewGuid());
+        var response = await client.PostAsJsonAsync("/api/v1/shipments", request);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
     public async Task AnonymousRequests_AreRejected()
     {
         var client = factory.CreateClient();

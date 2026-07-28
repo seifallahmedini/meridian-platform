@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using FluentValidation;
 using MeridianPlatform.Domain;
+using MeridianPlatform.Infrastructure.Persistence;
 
 namespace MeridianPlatform.Application.Shipments;
 
@@ -10,10 +11,12 @@ namespace MeridianPlatform.Application.Shipments;
 /// </summary>
 public partial class SubmitShipmentRequestValidator : AbstractValidator<SaveShipmentRequest>
 {
-    public SubmitShipmentRequestValidator()
+    public SubmitShipmentRequestValidator(AppDbContext dbContext)
     {
-        RuleFor(x => x.OriginLocationId).NotEmpty();
-        RuleFor(x => x.DestinationLocationId).NotEmpty();
+        RuleFor(x => x.OriginLocationId).NotEmpty()
+            .MustBeOwnedLocation(dbContext).When(x => x.OriginLocationId.HasValue, ApplyConditionTo.CurrentValidator);
+        RuleFor(x => x.DestinationLocationId).NotEmpty()
+            .MustBeOwnedLocation(dbContext).When(x => x.DestinationLocationId.HasValue, ApplyConditionTo.CurrentValidator);
         RuleFor(x => x)
             .Must(x => x.OriginLocationId != x.DestinationLocationId)
             .WithMessage("Origin and destination must be different locations.")
@@ -27,7 +30,7 @@ public partial class SubmitShipmentRequestValidator : AbstractValidator<SaveShip
 
         RuleFor(x => x.FreightClass)
             .NotEmpty()
-            .Must(fc => FreightClasses.All.Contains(fc!))
+            .Must(fc => fc is not null && FreightClasses.All.Contains(fc))
             .WithMessage("Freight class must be one of the supported NMFC classes.");
 
         RuleFor(x => x.ServiceLevel)
