@@ -1,3 +1,4 @@
+import type React from 'react'
 import { useEffect, useState } from 'react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Check, ChevronsUpDown, Plus } from 'lucide-react'
@@ -15,15 +16,22 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { cn } from '@/lib/utils'
 import { useApiClient } from '@/lib/api-client/useApiClient'
 
-interface LocationComboboxProps {
-  id?: string
+interface LocationComboboxProps
+  extends Omit<React.ComponentProps<typeof Button>, 'value' | 'onChange' | 'placeholder'> {
   value: string | null
   selectedLabel: string | null
   onChange: (locationId: string | null, label: string | null) => void
   placeholder: string
 }
 
-export function LocationCombobox({ id, value, selectedLabel, onChange, placeholder }: LocationComboboxProps) {
+export function LocationCombobox({
+  value,
+  selectedLabel,
+  onChange,
+  placeholder,
+  className,
+  ...triggerProps
+}: LocationComboboxProps) {
   const [open, setOpen] = useState(false)
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
@@ -47,12 +55,12 @@ export function LocationCombobox({ id, value, selectedLabel, onChange, placehold
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
-            id={id}
             type="button"
             variant="outline"
             role="combobox"
             aria-expanded={open}
-            className="w-full justify-between font-normal"
+            className={cn('w-full justify-between font-normal', className)}
+            {...triggerProps}
           >
             {selectedLabel ?? placeholder}
             <ChevronsUpDown className="opacity-50" />

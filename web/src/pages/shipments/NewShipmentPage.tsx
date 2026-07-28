@@ -169,7 +169,6 @@ export function NewShipmentPage() {
                     <FormLabel>Origin</FormLabel>
                     <FormControl>
                       <LocationCombobox
-                        id={field.name}
                         value={field.value}
                         selectedLabel={originLabel}
                         placeholder="Select an origin address"
@@ -191,7 +190,6 @@ export function NewShipmentPage() {
                     <FormLabel>Destination</FormLabel>
                     <FormControl>
                       <LocationCombobox
-                        id={field.name}
                         value={field.value}
                         selectedLabel={destinationLabel}
                         placeholder="Select a destination address"
