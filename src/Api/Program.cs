@@ -78,6 +78,7 @@ app.UseAuthorization();
 app.MapHealthEndpoints();
 app.MapSampleEndpoints();
 app.MapLocationEndpoints();
+app.MapShipmentEndpoints();
 
 app.Run();
 
