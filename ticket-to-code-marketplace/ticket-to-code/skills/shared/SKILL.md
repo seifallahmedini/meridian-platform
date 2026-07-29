@@ -1,22 +1,22 @@
 ---
 name: ticket-to-code-conventions
 description: >
-  Shared conventions for the ticket-to-code workflow. This is a reference loaded by the four
-  workflow skills (explore-ticket, annotate-ticket, plan-ticket, implement-plan). Not usually
-  invoked directly by the user. Use when you need the handoff contract, the workspace layout,
-  the Jira/GitHub tool mapping, or the priority mapping shared across the workflow stages.
+  Shared conventions for the ticket-to-code workflow. This is a reference loaded by the five
+  workflow skills (explore-ticket, annotate-ticket, plan-ticket, implement-plan, code-review). Not
+  usually invoked directly by the user. Use when you need the handoff contract, the workspace
+  layout, the Jira/GitHub tool mapping, or the priority mapping shared across the workflow stages.
 ---
 
 # Ticket-to-Code — Shared Conventions
 
 This file is the contract every stage of the workflow relies on. Read it whenever you run any
-`ticket-to-code` skill so the four stages stay consistent and can hand off to each other cleanly.
+`ticket-to-code` skill so the five stages stay consistent and can hand off to each other cleanly.
 
-## The four stages
+## The five stages
 
 ```
-explore-ticket  →  annotate-ticket  →  plan-ticket  →  implement-plan
-   (stage 1)          (stage 2)          (stage 3)        (stage 4)
+explore-ticket  →  annotate-ticket  →  plan-ticket  →  implement-plan  →  code-review
+   (stage 1)          (stage 2)          (stage 3)        (stage 4)          (stage 5)
 ```
 
 Each stage reads the artifact the previous stage wrote, does its work, writes its own artifact,
@@ -34,7 +34,8 @@ workflow/<TICKET-KEY>/
 ├── 01-exploration.md          # stage 1 output: ticket + code findings
 ├── 02-technical-instructions.md  # stage 2 output: the text posted back to the ticket
 ├── 03-plan.md                 # stage 3 output: ordered implementation plan
-└── 04-implementation-report.md   # stage 4 output: what was built, PR link, test results
+├── 04-implementation-report.md   # stage 4 output: what was built, PR link, test results
+└── 05-code-review.md          # stage 5 output: review findings, PR review state
 ```
 
 `<TICKET-KEY>` is the Jira key, e.g. `MLP-18`. Always use the real key so parallel runs on
@@ -62,7 +63,7 @@ The workflow targets Jira + GitHub but is written so the tools can be swapped.
 | Category        | This stack | Tools used                                                            |
 | --------------- | ---------- | --------------------------------------------------------------------- |
 | Issue tracker   | Jira       | `getJiraIssue`, `editJiraIssue`, `addCommentToJiraIssue`, `transitionJiraIssue`, `getTransitionsForJiraIssue` (Atlassian MCP) |
-| Code host       | GitHub     | GitHub MCP connector if available; otherwise `git`/`gh` in the sandbox |
+| Code host       | GitHub     | GitHub MCP connector if available; otherwise `git`/`gh` in the sandbox (`gh pr diff`, `gh pr review`) |
 | Local code work | Sandbox    | Bash (`git`, build/test runners), Read, Grep, Glob, Edit, Write        |
 
 If the GitHub connector is not connected, tell the user once, then fall back to cloning over

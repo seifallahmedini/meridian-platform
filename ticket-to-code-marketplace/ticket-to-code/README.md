@@ -1,11 +1,11 @@
 # ticket-to-code
 
-An agentic, four-stage workflow that takes a Jira ticket from exploration all the way to shipped
-code. Each stage is a **skill** that does one job well and then **hands off to the next**, so you
-can run the whole chain from a single ticket or invoke any stage on its own.
+An agentic, five-stage workflow that takes a Jira ticket from exploration all the way to a
+reviewed pull request. Each stage is a **skill** that does one job well and then **hands off to
+the next**, so you can run the whole chain from a single ticket or invoke any stage on its own.
 
 ```
-explore-ticket  →  annotate-ticket  →  plan-ticket  →  implement-plan
+explore-ticket  →  annotate-ticket  →  plan-ticket  →  implement-plan  →  code-review
 ```
 
 ## What each stage does
@@ -21,6 +21,9 @@ explore-ticket  →  annotate-ticket  →  plan-ticket  →  implement-plan
    Definition of Done tied to the acceptance criteria.
 4. **implement-plan** — Executes the plan: branches, codes each step, runs tests, opens a pull
    request, comments the result back on the ticket, and transitions its status.
+5. **code-review** — Reviews the PR for concrete bugs, standards compliance, and spec compliance
+   against the plan's Definition of Done; posts findings as PR review comments and gates the
+   workflow on any confirmed high-severity finding instead of declaring the ticket done.
 
 ## How the hand-off works
 
@@ -34,11 +37,12 @@ workflow/<TICKET-KEY>/
 ├── 01-exploration.md             # stage 1
 ├── 02-technical-instructions.md  # stage 2 (also posted to Jira)
 ├── 03-plan.md                    # stage 3
-└── 04-implementation-report.md   # stage 4 (PR link, test results)
+├── 04-implementation-report.md   # stage 4 (PR link, test results)
+└── 05-code-review.md             # stage 5 (findings, PR review state)
 ```
 
 Shared conventions (workspace layout, tool mapping, priority mapping, Jira house style) live in
-`skills/shared/SKILL.md` and are read by all four stages.
+`skills/shared/SKILL.md` and are read by all five stages.
 
 ## How to use it
 
@@ -48,7 +52,7 @@ Start the chain by naming a ticket:
 
 Or drive it stage by stage:
 
-> "Add technical instructions to MLP-18." · "Make a plan for MLP-18." · "Implement the plan for MLP-18."
+> "Add technical instructions to MLP-18." · "Make a plan for MLP-18." · "Implement the plan for MLP-18." · "Review the PR for MLP-18."
 
 ## Requirements
 
@@ -63,5 +67,7 @@ Or drive it stage by stage:
   publish step in `annotate-ticket` / `plan-ticket`.
 - Different branch or commit-message conventions? Edit the plan template in `plan-ticket` and the
   commit guidance in `implement-plan`.
+- Want review findings to gate on something other than confirmed high-severity bugs, or to skip
+  posting PR comments? Edit the gating rule and Step 4 in `code-review`.
 - Different tracker or code host? The tool mapping in `skills/shared/SKILL.md` is the single place
   to swap tools.

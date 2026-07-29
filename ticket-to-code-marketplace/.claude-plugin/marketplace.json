@@ -5,7 +5,7 @@
     {
       "name": "ticket-to-code",
       "source": "./ticket-to-code",
-      "description": "Four-stage agentic workflow: explore a Jira ticket + repo, write technical instructions back to the ticket, produce an implementation plan, then implement it."
+      "description": "Five-stage agentic workflow: explore a Jira ticket + repo, write technical instructions back to the ticket, produce an implementation plan, implement it, then code-review the resulting PR."
     }
   ]
 }
