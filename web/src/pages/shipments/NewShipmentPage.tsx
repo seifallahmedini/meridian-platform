@@ -141,16 +141,21 @@ export function NewShipmentPage() {
           <CardTitle>Shipment created</CardTitle>
         </CardHeader>
         <CardContent>
-          <Button
-            onClick={() => {
-              form.reset(emptyValues)
-              setOriginLabel(null)
-              setDestinationLabel(null)
-              setSubmitted(false)
-            }}
-          >
-            Create another shipment
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              onClick={() => {
+                form.reset(emptyValues)
+                setOriginLabel(null)
+                setDestinationLabel(null)
+                setSubmitted(false)
+              }}
+            >
+              Create another shipment
+            </Button>
+            <Button variant="outline" onClick={() => navigate('/shipments/drafts')}>
+              Back to Drafts
+            </Button>
+          </div>
         </CardContent>
       </Card>
     )
@@ -246,6 +251,14 @@ export function NewShipmentPage() {
             )}
 
             <div className="flex gap-3">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => navigate('/shipments/drafts')}
+                disabled={saveMutation.isPending}
+              >
+                Cancel
+              </Button>
               <Button type="button" variant="outline" onClick={onSaveDraft} disabled={saveMutation.isPending}>
                 Save as Draft
               </Button>
