@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams } from 'react-router'
+import { toast } from 'sonner'
 import { CargoFields } from '@/pages/shipments/components/CargoFields'
 import { LocationCombobox } from '@/pages/shipments/components/LocationCombobox'
 import { Button } from '@/components/ui/button'
@@ -96,6 +97,7 @@ export function NewShipmentPage() {
       setSaveError(null)
       queryClient.invalidateQueries({ queryKey: ['shipments'] })
       if (isDraft) {
+        toast.success('Draft saved.')
         navigate('/shipments/drafts')
       } else {
         setSubmitted(true)

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import {
@@ -71,8 +72,12 @@ export function AddLocationDialog({ open, onOpenChange, onCreated }: AddLocation
         }),
       ),
     onSuccess: (location) => {
+      toast.success('Address saved.')
       onCreated(location)
       onOpenChange(false)
+    },
+    onError: () => {
+      toast.error('Failed to save the address. Please try again.')
     },
   })
 

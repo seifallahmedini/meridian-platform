@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { Toaster } from 'sonner'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { NewShipmentPage } from './NewShipmentPage'
 
@@ -64,6 +65,7 @@ function renderPage() {
   return render(
     <QueryClientProvider client={queryClient}>
       <NewShipmentPage />
+      <Toaster />
     </QueryClientProvider>,
   )
 }
@@ -82,7 +84,7 @@ describe('NewShipmentPage', () => {
     expect(mockClient.createShipment).not.toHaveBeenCalled()
   })
 
-  it('saves as draft even when every field is empty', async () => {
+  it('saves as draft even when every field is empty, showing a success toast', async () => {
     const user = userEvent.setup()
     renderPage()
 
@@ -90,6 +92,7 @@ describe('NewShipmentPage', () => {
 
     await waitFor(() => expect(mockClient.createShipment).toHaveBeenCalledTimes(1))
     expect(mockClient.createShipment.mock.calls[0][0]).toMatchObject({ isDraft: true })
+    expect(await screen.findByText('Draft saved.')).toBeInTheDocument()
   })
 
   it('selecting an existing location from the combobox populates the field', async () => {
