@@ -1,0 +1,12 @@
+{
+  "ticketKey": "MLP-49",
+  "ticketUrl": "https://seifallahmedini.atlassian.net/browse/MLP-49",
+  "cloudId": "cba64c90-447a-4a15-8f2e-24affb42f69d",
+  "repo": {
+    "provider": "github",
+    "url": "https://github.com/seifallahmedini/meridian-platform",
+    "defaultBranch": "main"
+  },
+  "workBranch": "feature/MLP-49-toast-notifications",
+  "startedAt": "2026-07-29T21:00:00Z"
+}
