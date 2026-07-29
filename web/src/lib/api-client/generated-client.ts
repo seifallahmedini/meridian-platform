@@ -193,6 +193,371 @@ export class Client {
         }
         return Promise.resolve<SampleWidgetDto[]>(null as any);
     }
+
+    /**
+     * @param query (optional) 
+     * @return OK
+     */
+    getLocations(query: string | undefined): Promise<LocationDto[]> {
+        let url_ = this.baseUrl + "/api/v1/locations?";
+        if (query === null)
+            throw new globalThis.Error("The parameter 'query' cannot be null.");
+        else if (query !== undefined)
+            url_ += "query=" + encodeURIComponent("" + query) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetLocations(_response);
+        });
+    }
+
+    protected processGetLocations(response: Response): Promise<LocationDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(LocationDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<LocationDto[]>(null as any);
+    }
+
+    /**
+     * @return Created
+     */
+    createLocation(body: CreateLocationRequest): Promise<LocationDto> {
+        let url_ = this.baseUrl + "/api/v1/locations";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateLocation(_response);
+        });
+    }
+
+    protected processCreateLocation(response: Response): Promise<LocationDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 201) {
+            return response.text().then((_responseText) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = LocationDto.fromJS(resultData201);
+            return result201;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = HttpValidationProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<LocationDto>(null as any);
+    }
+
+    /**
+     * @return Created
+     */
+    createShipment(body: SaveShipmentRequest): Promise<ShipmentDto> {
+        let url_ = this.baseUrl + "/api/v1/shipments";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateShipment(_response);
+        });
+    }
+
+    protected processCreateShipment(response: Response): Promise<ShipmentDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 201) {
+            return response.text().then((_responseText) => {
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = ShipmentDto.fromJS(resultData201);
+            return result201;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = HttpValidationProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ShipmentDto>(null as any);
+    }
+
+    /**
+     * @param status (optional) 
+     * @return OK
+     */
+    getShipments(status: ShipmentStatus | undefined): Promise<ShipmentSummaryDto[]> {
+        let url_ = this.baseUrl + "/api/v1/shipments?";
+        if (status === null)
+            throw new globalThis.Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
+            url_ += "status=" + encodeURIComponent("" + status) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetShipments(_response);
+        });
+    }
+
+    protected processGetShipments(response: Response): Promise<ShipmentSummaryDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ShipmentSummaryDto.fromJS(item));
+            }
+            else {
+                result200 = null as any;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ShipmentSummaryDto[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    updateShipment(id: string, body: SaveShipmentRequest): Promise<ShipmentDto> {
+        let url_ = this.baseUrl + "/api/v1/shipments/{id}";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateShipment(_response);
+        });
+    }
+
+    protected processUpdateShipment(response: Response): Promise<ShipmentDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ShipmentDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 400) {
+            return response.text().then((_responseText) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = HttpValidationProblemDetails.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("Not Found", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ShipmentDto>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getShipmentById(id: string): Promise<ShipmentDto> {
+        let url_ = this.baseUrl + "/api/v1/shipments/{id}";
+        if (id === undefined || id === null)
+            throw new globalThis.Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetShipmentById(_response);
+        });
+    }
+
+    protected processGetShipmentById(response: Response): Promise<ShipmentDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ShipmentDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status === 404) {
+            return response.text().then((_responseText) => {
+            return throwException("Not Found", status, _responseText, _headers);
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ShipmentDto>(null as any);
+    }
+}
+
+export class CreateLocationRequest implements ICreateLocationRequest {
+    label!: string;
+    addressLine1!: string;
+    addressLine2!: string | undefined;
+    city!: string;
+    state!: string;
+    postalCode!: string;
+    country!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ICreateLocationRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.label = _data["label"];
+            this.addressLine1 = _data["addressLine1"];
+            this.addressLine2 = _data["addressLine2"];
+            this.city = _data["city"];
+            this.state = _data["state"];
+            this.postalCode = _data["postalCode"];
+            this.country = _data["country"];
+        }
+    }
+
+    static fromJS(data: any): CreateLocationRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateLocationRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["label"] = this.label;
+        data["addressLine1"] = this.addressLine1;
+        data["addressLine2"] = this.addressLine2;
+        data["city"] = this.city;
+        data["state"] = this.state;
+        data["postalCode"] = this.postalCode;
+        data["country"] = this.country;
+        return data;
+    }
+}
+
+export interface ICreateLocationRequest {
+    label: string;
+    addressLine1: string;
+    addressLine2: string | undefined;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+
+    [key: string]: any;
 }
 
 export class CreateSampleWidgetRequest implements ICreateSampleWidgetRequest {
@@ -371,6 +736,82 @@ export interface IHttpValidationProblemDetails {
     [key: string]: any;
 }
 
+export class LocationDto implements ILocationDto {
+    id!: string;
+    label!: string;
+    addressLine1!: string;
+    addressLine2!: string | undefined;
+    city!: string;
+    state!: string;
+    postalCode!: string;
+    country!: string;
+
+    [key: string]: any;
+
+    constructor(data?: ILocationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.label = _data["label"];
+            this.addressLine1 = _data["addressLine1"];
+            this.addressLine2 = _data["addressLine2"];
+            this.city = _data["city"];
+            this.state = _data["state"];
+            this.postalCode = _data["postalCode"];
+            this.country = _data["country"];
+        }
+    }
+
+    static fromJS(data: any): LocationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new LocationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["label"] = this.label;
+        data["addressLine1"] = this.addressLine1;
+        data["addressLine2"] = this.addressLine2;
+        data["city"] = this.city;
+        data["state"] = this.state;
+        data["postalCode"] = this.postalCode;
+        data["country"] = this.country;
+        return data;
+    }
+}
+
+export interface ILocationDto {
+    id: string;
+    label: string;
+    addressLine1: string;
+    addressLine2: string | undefined;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+
+    [key: string]: any;
+}
+
 export class SampleWidgetDto implements ISampleWidgetDto {
     id!: string;
     name!: string;
@@ -423,6 +864,287 @@ export interface ISampleWidgetDto {
     id: string;
     name: string;
     createdAt: Date;
+
+    [key: string]: any;
+}
+
+export class SaveShipmentRequest implements ISaveShipmentRequest {
+    originLocationId!: string | undefined;
+    destinationLocationId!: string | undefined;
+    weightKg!: number | undefined;
+    lengthCm!: number | undefined;
+    widthCm!: number | undefined;
+    heightCm!: number | undefined;
+    freightClass!: string | undefined;
+    isHazmat!: boolean;
+    hazmatUnNumber!: string | undefined;
+    hazmatPackingGroup!: string | undefined;
+    hazmatEmergencyContact!: string | undefined;
+    serviceLevel!: string | undefined;
+    isDraft!: boolean;
+
+    [key: string]: any;
+
+    constructor(data?: ISaveShipmentRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.originLocationId = _data["originLocationId"];
+            this.destinationLocationId = _data["destinationLocationId"];
+            this.weightKg = _data["weightKg"];
+            this.lengthCm = _data["lengthCm"];
+            this.widthCm = _data["widthCm"];
+            this.heightCm = _data["heightCm"];
+            this.freightClass = _data["freightClass"];
+            this.isHazmat = _data["isHazmat"];
+            this.hazmatUnNumber = _data["hazmatUnNumber"];
+            this.hazmatPackingGroup = _data["hazmatPackingGroup"];
+            this.hazmatEmergencyContact = _data["hazmatEmergencyContact"];
+            this.serviceLevel = _data["serviceLevel"];
+            this.isDraft = _data["isDraft"];
+        }
+    }
+
+    static fromJS(data: any): SaveShipmentRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new SaveShipmentRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["originLocationId"] = this.originLocationId;
+        data["destinationLocationId"] = this.destinationLocationId;
+        data["weightKg"] = this.weightKg;
+        data["lengthCm"] = this.lengthCm;
+        data["widthCm"] = this.widthCm;
+        data["heightCm"] = this.heightCm;
+        data["freightClass"] = this.freightClass;
+        data["isHazmat"] = this.isHazmat;
+        data["hazmatUnNumber"] = this.hazmatUnNumber;
+        data["hazmatPackingGroup"] = this.hazmatPackingGroup;
+        data["hazmatEmergencyContact"] = this.hazmatEmergencyContact;
+        data["serviceLevel"] = this.serviceLevel;
+        data["isDraft"] = this.isDraft;
+        return data;
+    }
+}
+
+export interface ISaveShipmentRequest {
+    originLocationId: string | undefined;
+    destinationLocationId: string | undefined;
+    weightKg: number | undefined;
+    lengthCm: number | undefined;
+    widthCm: number | undefined;
+    heightCm: number | undefined;
+    freightClass: string | undefined;
+    isHazmat: boolean;
+    hazmatUnNumber: string | undefined;
+    hazmatPackingGroup: string | undefined;
+    hazmatEmergencyContact: string | undefined;
+    serviceLevel: string | undefined;
+    isDraft: boolean;
+
+    [key: string]: any;
+}
+
+export class ShipmentDto implements IShipmentDto {
+    id!: string;
+    originLocationId!: string | undefined;
+    originLocationLabel!: string | undefined;
+    destinationLocationId!: string | undefined;
+    destinationLocationLabel!: string | undefined;
+    weightKg!: number | undefined;
+    lengthCm!: number | undefined;
+    widthCm!: number | undefined;
+    heightCm!: number | undefined;
+    freightClass!: string | undefined;
+    isHazmat!: boolean;
+    hazmatUnNumber!: string | undefined;
+    hazmatPackingGroup!: string | undefined;
+    hazmatEmergencyContact!: string | undefined;
+    serviceLevel!: string | undefined;
+    status!: ShipmentStatus;
+    createdAt!: Date;
+    updatedAt!: Date;
+
+    [key: string]: any;
+
+    constructor(data?: IShipmentDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.originLocationId = _data["originLocationId"];
+            this.originLocationLabel = _data["originLocationLabel"];
+            this.destinationLocationId = _data["destinationLocationId"];
+            this.destinationLocationLabel = _data["destinationLocationLabel"];
+            this.weightKg = _data["weightKg"];
+            this.lengthCm = _data["lengthCm"];
+            this.widthCm = _data["widthCm"];
+            this.heightCm = _data["heightCm"];
+            this.freightClass = _data["freightClass"];
+            this.isHazmat = _data["isHazmat"];
+            this.hazmatUnNumber = _data["hazmatUnNumber"];
+            this.hazmatPackingGroup = _data["hazmatPackingGroup"];
+            this.hazmatEmergencyContact = _data["hazmatEmergencyContact"];
+            this.serviceLevel = _data["serviceLevel"];
+            this.status = _data["status"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : undefined as any;
+            this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): ShipmentDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ShipmentDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["originLocationId"] = this.originLocationId;
+        data["originLocationLabel"] = this.originLocationLabel;
+        data["destinationLocationId"] = this.destinationLocationId;
+        data["destinationLocationLabel"] = this.destinationLocationLabel;
+        data["weightKg"] = this.weightKg;
+        data["lengthCm"] = this.lengthCm;
+        data["widthCm"] = this.widthCm;
+        data["heightCm"] = this.heightCm;
+        data["freightClass"] = this.freightClass;
+        data["isHazmat"] = this.isHazmat;
+        data["hazmatUnNumber"] = this.hazmatUnNumber;
+        data["hazmatPackingGroup"] = this.hazmatPackingGroup;
+        data["hazmatEmergencyContact"] = this.hazmatEmergencyContact;
+        data["serviceLevel"] = this.serviceLevel;
+        data["status"] = this.status;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : undefined as any;
+        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface IShipmentDto {
+    id: string;
+    originLocationId: string | undefined;
+    originLocationLabel: string | undefined;
+    destinationLocationId: string | undefined;
+    destinationLocationLabel: string | undefined;
+    weightKg: number | undefined;
+    lengthCm: number | undefined;
+    widthCm: number | undefined;
+    heightCm: number | undefined;
+    freightClass: string | undefined;
+    isHazmat: boolean;
+    hazmatUnNumber: string | undefined;
+    hazmatPackingGroup: string | undefined;
+    hazmatEmergencyContact: string | undefined;
+    serviceLevel: string | undefined;
+    status: ShipmentStatus;
+    createdAt: Date;
+    updatedAt: Date;
+
+    [key: string]: any;
+}
+
+export enum ShipmentStatus {
+    Draft = "Draft",
+    Submitted = "Submitted",
+}
+
+export class ShipmentSummaryDto implements IShipmentSummaryDto {
+    id!: string;
+    originLocationLabel!: string | undefined;
+    destinationLocationLabel!: string | undefined;
+    serviceLevel!: string | undefined;
+    updatedAt!: Date;
+
+    [key: string]: any;
+
+    constructor(data?: IShipmentSummaryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.id = _data["id"];
+            this.originLocationLabel = _data["originLocationLabel"];
+            this.destinationLocationLabel = _data["destinationLocationLabel"];
+            this.serviceLevel = _data["serviceLevel"];
+            this.updatedAt = _data["updatedAt"] ? new Date(_data["updatedAt"].toString()) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): ShipmentSummaryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ShipmentSummaryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["id"] = this.id;
+        data["originLocationLabel"] = this.originLocationLabel;
+        data["destinationLocationLabel"] = this.destinationLocationLabel;
+        data["serviceLevel"] = this.serviceLevel;
+        data["updatedAt"] = this.updatedAt ? this.updatedAt.toISOString() : undefined as any;
+        return data;
+    }
+}
+
+export interface IShipmentSummaryDto {
+    id: string;
+    originLocationLabel: string | undefined;
+    destinationLocationLabel: string | undefined;
+    serviceLevel: string | undefined;
+    updatedAt: Date;
 
     [key: string]: any;
 }

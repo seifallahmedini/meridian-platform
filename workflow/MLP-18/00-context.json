@@ -1,0 +1,12 @@
+{
+  "ticketKey": "MLP-18",
+  "ticketUrl": "https://seifallahmedini.atlassian.net/browse/MLP-18",
+  "cloudId": "cba64c90-447a-4a15-8f2e-24affb42f69d",
+  "repo": {
+    "provider": "github",
+    "url": "https://github.com/seifallahmedini/meridian-platform",
+    "defaultBranch": "main"
+  },
+  "workBranch": "feature/MLP-18-single-shipment-creation-v2",
+  "startedAt": "2026-07-28T19:38:10Z"
+}

@@ -1,0 +1,57 @@
+using System.Text.RegularExpressions;
+using FluentValidation;
+using MeridianPlatform.Domain;
+using MeridianPlatform.Infrastructure.Persistence;
+
+namespace MeridianPlatform.Application.Shipments;
+
+/// <summary>
+/// Applied when creating/updating a non-draft shipment: every cargo field is required, and the
+/// hazmat fields become required when IsHazmat is set.
+/// </summary>
+public partial class SubmitShipmentRequestValidator : AbstractValidator<SaveShipmentRequest>
+{
+    public SubmitShipmentRequestValidator(AppDbContext dbContext)
+    {
+        RuleFor(x => x.OriginLocationId).NotEmpty()
+            .MustBeOwnedLocation(dbContext).When(x => x.OriginLocationId.HasValue, ApplyConditionTo.CurrentValidator);
+        RuleFor(x => x.DestinationLocationId).NotEmpty()
+            .MustBeOwnedLocation(dbContext).When(x => x.DestinationLocationId.HasValue, ApplyConditionTo.CurrentValidator);
+        RuleFor(x => x)
+            .Must(x => x.OriginLocationId != x.DestinationLocationId)
+            .WithMessage("Origin and destination must be different locations.")
+            .WithName("DestinationLocationId")
+            .When(x => x.OriginLocationId.HasValue && x.DestinationLocationId.HasValue);
+
+        RuleFor(x => x.WeightKg).NotNull().GreaterThan(0);
+        RuleFor(x => x.LengthCm).NotNull().GreaterThan(0);
+        RuleFor(x => x.WidthCm).NotNull().GreaterThan(0);
+        RuleFor(x => x.HeightCm).NotNull().GreaterThan(0);
+
+        RuleFor(x => x.FreightClass)
+            .NotEmpty()
+            .Must(fc => fc is not null && FreightClasses.All.Contains(fc))
+            .WithMessage("Freight class must be one of the supported NMFC classes.");
+
+        RuleFor(x => x.ServiceLevel)
+            .NotEmpty()
+            .Must(sl => Enum.TryParse<ServiceLevel>(sl, out _))
+            .WithMessage("Service level must be one of Standard, Expedited, Guaranteed.");
+
+        When(x => x.IsHazmat, () =>
+        {
+            RuleFor(x => x.HazmatUnNumber)
+                .NotEmpty()
+                .Must(v => v is not null && UnNumberRegex().IsMatch(v))
+                .WithMessage("UN number must match the format UN####.");
+            RuleFor(x => x.HazmatPackingGroup)
+                .NotEmpty()
+                .Must(v => v is "I" or "II" or "III")
+                .WithMessage("Packing group must be I, II, or III.");
+            RuleFor(x => x.HazmatEmergencyContact).NotEmpty();
+        });
+    }
+
+    [GeneratedRegex(@"^UN\d{4}$")]
+    private static partial Regex UnNumberRegex();
+}
