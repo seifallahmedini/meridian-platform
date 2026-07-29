@@ -1,16 +1,18 @@
 ---
 name: implement-plan
 description: >
-  Stage 4 (final) of the ticket-to-code workflow. Execute the implementation plan against the
+  Stage 4 of the ticket-to-code workflow. Execute the implementation plan against the
   repository: branch, code the steps, run tests, open a pull request, and update the ticket. Use
   when the user says "implement the plan", "build MLP-123", "execute the plan", or right after
-  plan-ticket finishes. Reads 03-plan.md, makes the changes, and reports back to Jira.
+  plan-ticket finishes. Reads 03-plan.md, makes the changes, reports back to Jira, then hands off
+  to code-review.
 ---
 
 # Stage 4 — Implement the Plan
 
 Execute the plan step by step, verifying as you go, and close the loop back to the ticket. This
-is the only stage that writes code. It is the end of the chain.
+is the only stage that writes code. Once the PR is open, it hands off to `code-review` — it does
+not declare the ticket done itself.
 
 First, read `skills/shared/SKILL.md` for the workspace layout, the tool mapping, and the Jira
 priority/handoff rules.
@@ -63,8 +65,10 @@ what you tried in the implementation report, and surface the blocker rather than
 - Transition the ticket to the right status (e.g. In Review): read valid transitions with
   `getTransitionsForJiraIssue`, then `transitionJiraIssue`.
 
-## Step 6 — Write the report and finish
+## Step 6 — Write the report and hand off
 
 Save `workflow/<TICKET-KEY>/04-implementation-report.md` (what changed, files, test results, PR
-link, ticket status, anything deferred). Then give the user a short final summary: PR link,
-ticket status, tests passing, and any follow-ups. This ends the workflow — do not chain further.
+link, ticket status, anything deferred). Summarise it in one line (PR link, tests passing), then
+**invoke the `code-review` skill**, passing the ticket key, workspace path, and PR URL/number.
+Stop and ask only if something in the implementation needs a human decision before it can be
+reviewed.
