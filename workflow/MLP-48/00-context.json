@@ -1,0 +1,12 @@
+{
+  "ticketKey": "MLP-48",
+  "ticketUrl": "https://seifallahmedini.atlassian.net/browse/MLP-48",
+  "cloudId": "cba64c90-447a-4a15-8f2e-24affb42f69d",
+  "repo": {
+    "provider": "github",
+    "url": "https://github.com/seifallahmedini/meridian-platform",
+    "defaultBranch": "main"
+  },
+  "workBranch": "feature/MLP-48-app-navigation-shell",
+  "startedAt": "2026-07-29T00:00:00Z"
+}
